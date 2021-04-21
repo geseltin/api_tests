@@ -4,15 +4,11 @@ import random
 
 class RestHelper:
 
-    def __init__(self):
-        RestHelper.self = self
-
     def call_request(self, request_type=None, url=None, json=None,
                      headers=None, params=None, login="Administrator", password="5ecr3t"):
 
         auth_url = "http://10.201.48.88:8080/inrights/api/auth/login"
         payload = {"login": login, "password": password}
-        print(auth_url)
 
         current_session = requests.session()
 
@@ -79,7 +75,6 @@ class ObjectGenerators:
                      "workend": "2030-12-30T21:00:00.000Z",
                      "locale": None,
                      "telephoneNumber": self.tel_number()}
-        print(json_data)
         return json_data
 
     def tel_number(self):
@@ -88,5 +83,30 @@ class ObjectGenerators:
         return tel_number
 
 
-a = ObjectGenerators()
-a.user_data()
+class Utility:
+
+
+    def check_fio(self, first_name, last_name, add_name):
+        list_result = []
+        if first_name == 'Имя':
+            list_result.append('PASS')
+        else:
+            list_result.append('FAIL')
+
+        if last_name == 'Фамилия':
+            list_result.append('PASS')
+        else:
+            list_result.append('FAIL')
+
+        if add_name == 'Отчество':
+            list_result.append('PASS')
+        else:
+            list_result.append('FAIL')
+
+        return list_result
+
+
+
+a = Utility()
+b = a.check_fio('Имя', 'Фамилия', 'Отчество')
+print(b)
