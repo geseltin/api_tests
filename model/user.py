@@ -1,55 +1,74 @@
-from tests.rest_helper import RestHelper
 import random
 
+class User:
 
-class UserHelper:
+    def __init__(self,
+                 oid=None,
+                 lastName=None,
+                 firstName=None,
+                 addName=None,
+                 dateOfBirth=None,
+                 telephoneNumber=None,
+                 type="штатный",
+                 dateFrom="1998-12-31T21:00:00.000Z",
+                 workend="2050-12-30T21:00:00.000Z",
+                 locale=None,
+                 positionOid=["15ba0465-d831-46d0-b46d-e02b36dc74ef"],
+                 contractNumber=None,
+                 manager=None):
+        self.oid = oid
+        self.lastName = lastName or self.generate_last_name()
+        self.firstName = firstName or self.generate_first_name()
+        self.addName = addName or self.generate_add_name()
+        self.dateOfBirth = dateOfBirth or self.generate_date_of_birth()
+        self.telephoneNumber = telephoneNumber or self.generate_telephone_number()
+        self.type = type
+        self.dateFrom = dateFrom
+        self.workend = workend
+        self.locale = locale
+        self.positionOid = positionOid
+        self.contractNumber = contractNumber
+        self.manager = manager
 
-    def create_user(self):
-        url = "http://10.201.48.88:8080/inrights/api/user/card/new"
-        headers = {"Accept-Encoding": "gzip, deflate", "Accept-Language": "ru"}
-        params = {"id": "users.NewUser-1"}
+    def __repr__(self):
+        return f'User with atributes --- oid: {self.oid}, ' \
+               f'last_name: {self.lastName}, ' \
+               f'first_name: {self.firstName}, ' \
+               f'add_name: {self.addName}, ' \
+               f'dateOfBirth: {self.dateOfBirth}, ' \
+               f'telephoneNumber: {self.telephoneNumber}, ' \
+               f'type: {self.type}, ' \
+               f'dateFrom: {self.dateFrom}, ' \
+               f'workend: {self.workend}, ' \
+               f'locale: {self.locale}, ' \
+               f'positionOid: {self.positionOid}, ' \
+               f'contractNumber: {self.contractNumber}'
 
-        rest_helper = RestHelper()
-        json = self.user_data(position="ab2ee738-243d-446c-b371-138478bcd528")
-        print(json)
+    def return_user_data_as_json(self):
+        json_data = {"position": self.positionOid,
+                     "manager": self.manager,
+                     "lastName": self.lastName,
+                     "firstName": self.firstName,
+                     "additionalName": self.addName,
+                     "dateOfBirth": self.dateOfBirth,
+                     "type": self.type,
+                     "contractNumber": self.contractNumber,
+                     "dateFrom": self.dateFrom,
+                     "workend": self.workend,
+                     "locale": self.locale,
+                     "telephoneNumber": self.telephoneNumber}
+        return json_data
 
-        response = rest_helper.call_request(request_type="PUT", url=url, json=json, headers=headers, params=params)
-
-        json_response = response.json()
-
-        items = json_response['items']
-        for i in items:
-            if i['name'] == 'lastName':
-                new_user_last_name = i['value']
-
-        for i in items:
-            if i['name'] == 'firstName':
-                new_user_first_name = i['value']
-
-        for i in items:
-            if i['name'] == 'additionalName':
-                new_user_add_name = i['value']
-
-        new_user_oid = json_response['oid']
-
-        print(f'Created user OID: {str(new_user_oid)}')
-        print(f'Created user lastName: {str(new_user_last_name)}')
-        print(f'Created user firstName: {str(new_user_first_name)}')
-        print(f'Created user addName: {str(new_user_add_name)}')
-
-        return json_response
-
-    def get_user_data_by_oid(self, json_response):
-        print(json_response)
-
-    def user_data(self, position="ab2ee738-243d-446c-b371-138478bcd528"):
+    def generate_last_name(self):
         last_name_collection = ["Иванов", "Петров", "Сидоров", "Кузнецов", "Биткоинов", "Картошкин", "Болконский",
                                 "Хренов", "Приколов", "Онегин", "Пушкин", "Ленин", "Сталин", "Брежнев", "Силуанов",
                                 "Путин", "Медведев", "Зайцев", "Коровин", "Птицев", "Собакин", "Кошкин", "Пельмешкин",
                                 "Дураков", "Огурцов", "Водкин", "Ивкин", "Тимофеев", "Андреев", "Соловьев", "Тараканов",
                                 "Муравьев", "Абдулкахова", "Титов", "Васильев"]
         last_name = last_name_collection[random.randint(0, len(last_name_collection) - 1)]
+        return last_name
 
+    def generate_first_name(self):
         first_name_collection = ["Андрей", "Александр", "Сергей", "Тимофей", "Антон", "Петр", "Иван", "Николай",
                                  "Константин", "Анатолий", "Дмитрий", "Михаил", "Илья", "Джон", "Агафон", "Авдей",
                                  "Альберт", "Вадим", "Виталий", "Вячеслав", "Владимир", "Всеволод", "Геннадий", "Глеб",
@@ -58,7 +77,9 @@ class UserHelper:
                                  "Прокопий", "Ефим", "Игнатий", "Руслан", "Ростислав", "Прохор", "Семен", "Ираклий",
                                  "Кузьма", "Лаврентий", "Лукьян"]
         first_name = first_name_collection[random.randint(0, len(first_name_collection) - 1)]
+        return first_name
 
+    def generate_add_name(self):
         add_name_collection = ["Андреевич", "Александрович", "Сергеевич", "Тимофеевич", "Антонович", "Петрович",
                                "Иванович", "Николаевич", "Константинович", "Анатольевич", "Дмитриевич", "Михайлович",
                                "Ильич", "Агафонович", "Авдеевич", "Альбертович", "Вадимович", "Витальевич",
@@ -69,27 +90,22 @@ class UserHelper:
                                "Святославович", "Прокопьевич", "Ефимович", "Игнатьевич", "Русланович", "Ростиславович",
                                "Прохорович", "Семенович", "Ираклиевич", "Кузьмич", "Лаврентьевич", "Лукьянович"]
         add_name = add_name_collection[random.randint(0, len(add_name_collection) - 1)]
+        return add_name
 
-        date_of_birth = "19{0}-02-02".format(str(random.randint(10, 99)))
+    def generate_date_of_birth(self):
+        date_of_birth = f'19{str(random.randint(10, 99))}-02-02'
+        return date_of_birth
 
-        json_data = {"position": [position],
-                     "manager": None,
-                     "lastName": last_name,
-                     "firstName": first_name,
-                     "additionalName": add_name,
-                     "dateOfBirth": date_of_birth,
-                     "type": "штатный",
-                     "contractNumber": "777-999-111",
-                     "dateFrom": "1999-12-31T21:00:00.000Z",
-                     "workend": "2030-12-30T21:00:00.000Z",
-                     "locale": None,
-                     "telephoneNumber": self.tel_number()}
-        return json_data
-
-    def tel_number(self):
+    def generate_telephone_number(self):
         cypher_collection = [str(random.randint(0, 9)) for i in range(10)]
         tel_number = "8-{0[0]}{0[1]}{0[2]}-{0[3]}{0[4]}{0[5]}-{0[6]}{0[7]}-{0[8]}{0[9]}".format(cypher_collection)
         return tel_number
 
 
 
+
+
+a = User()
+print(a)
+a.oid = "8-800-555-35-35"
+print(a)

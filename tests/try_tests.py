@@ -1,7 +1,6 @@
-import requests
-from rest_helper import RestHelper
-from rest_helper import ObjectGenerators
-from org_helper import OrgHelper
+from helpers.rest_helper import RestHelper
+from helpers.rest_helper import ObjectGenerators
+
 
 # Через pytest удобнее запускать следующим образом: pytest -v -s api_tests.py
 # session = requests.session()
@@ -49,20 +48,20 @@ from org_helper import OrgHelper
 #                           "type":"org"},"manager": None}
 
 
-# def test_creating_user():
-#     url = "http://10.201.48.88:8080/inrights/api/user/card/new"
-#     headers = {"Accept-Encoding": "gzip, deflate", "Accept-Language": "ru"}
-#     params = {"id": "users.NewUser-1"}
-#
-#     rest_helper = RestHelper()
-#     object_generator = ObjectGenerators()
-#     json = object_generator.user_data()
-#     # print(json)
-#
-#     response = rest_helper.call_request(request_type="PUT", url=url, json=json, headers=headers, params=params)
-#
-#     json_response = response.json()
-#     print(json_response)
+def test_creating_user():
+    url = "http://10.201.48.88:8080/inrights/api/user/card/new"
+    headers = {"Accept-Encoding": "gzip, deflate", "Accept-Language": "ru"}
+    params = {"id": "users.NewUser-1"}
+
+    rest_helper = RestHelper()
+    object_generator = ObjectGenerators()
+    json = object_generator.user_data()
+    # print(json)
+
+    response = rest_helper.call_request(request_type="PUT", url=url, json=json, headers=headers, params=params)
+
+    json_response = response.json()
+    print(json_response)
 
 
 
