@@ -1,37 +1,46 @@
-import requests
+from tests.rest_helper import RestHelper
 import random
 
 
-class RestHelper:
+class UserHelper:
 
-    def call_request(self, request_type=None, url=None, json=None,
-                     headers=None, params=None, login="Administrator", password="5ecr3t"):
+    def create_user(self):
+        url = "http://10.201.48.88:8080/inrights/api/user/card/new"
+        headers = {"Accept-Encoding": "gzip, deflate", "Accept-Language": "ru"}
+        params = {"id": "users.NewUser-1"}
 
-        auth_url = "http://10.201.48.186:8080/inrights/api/auth/login"
-        payload = {"login": login, "password": password}
+        rest_helper = RestHelper()
+        json = self.user_data(position="ab2ee738-243d-446c-b371-138478bcd528")
+        print(json)
 
-        current_session = requests.session()
+        response = rest_helper.call_request(request_type="PUT", url=url, json=json, headers=headers, params=params)
 
-        response = current_session.post(auth_url, params=payload)
-        if response.status_code == 200 and response.headers.get('authenticationLevel') == "FULLY_AUTHENTICATED":
-            print("Login with admin credentials successful" + "\nRequest's status code = " + str(response.status_code)
-                  + " \n***************")
-            assert True
-        else:
-            print("FAILED: Requests's status = " + str(response.status_code))
-            assert False
+        json_response = response.json()
 
-        if request_type == "GET":
-            return current_session.get(url, json=json, headers=headers, params=params)
-        elif request_type == "POST":
-            return current_session.post(url, json=json, headers=headers, params=params)
-        elif request_type == "PUT":
-            return current_session.put(url, json=json, headers=headers, params=params)
-        elif request_type == "DELETE":
-            return current_session.delete(url, json=json, headers=headers, params=params)
+        items = json_response['items']
+        for i in items:
+            if i['name'] == 'lastName':
+                new_user_last_name = i['value']
 
+        for i in items:
+            if i['name'] == 'firstName':
+                new_user_first_name = i['value']
 
-class ObjectGenerators:
+        for i in items:
+            if i['name'] == 'additionalName':
+                new_user_add_name = i['value']
+
+        new_user_oid = json_response['oid']
+
+        print(f'Created user OID: {str(new_user_oid)}')
+        print(f'Created user lastName: {str(new_user_last_name)}')
+        print(f'Created user firstName: {str(new_user_first_name)}')
+        print(f'Created user addName: {str(new_user_add_name)}')
+
+        return json_response
+
+    def get_user_data_by_oid(self, json_response):
+        print(json_response)
 
     def user_data(self, position="ab2ee738-243d-446c-b371-138478bcd528"):
         last_name_collection = ["Иванов", "Петров", "Сидоров", "Кузнецов", "Биткоинов", "Картошкин", "Болконский",
@@ -83,30 +92,4 @@ class ObjectGenerators:
         return tel_number
 
 
-class Utility:
 
-
-    def check_fio(self, first_name, last_name, add_name):
-        list_result = []
-        if first_name == 'Имя':
-            list_result.append('PASS')
-        else:
-            list_result.append('FAIL')
-
-        if last_name == 'Фамилия':
-            list_result.append('PASS')
-        else:
-            list_result.append('FAIL')
-
-        if add_name == 'Отчество':
-            list_result.append('PASS')
-        else:
-            list_result.append('FAIL')
-
-        return list_result
-
-
-
-# a = Utility()
-# b = a.check_fio('Имя', 'Фамилия', 'Отчество')
-# print(b)
