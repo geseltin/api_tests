@@ -13,7 +13,7 @@ class User:
                  dateFrom="1998-12-31T21:00:00.000Z",
                  workend="2050-12-30T21:00:00.000Z",
                  locale=None,
-                 positionOid=["15ba0465-d831-46d0-b46d-e02b36dc74ef"],
+                 positionOid=["4ff0f334-66d3-42fe-beb6-2965ba3ed830"],
                  contractNumber=None,
                  manager=None):
         self.oid = oid
@@ -43,6 +43,29 @@ class User:
                f'locale: {self.locale}, ' \
                f'positionOid: {self.positionOid}, ' \
                f'contractNumber: {self.contractNumber}'
+
+    def __eq__(self, other):
+        return (self.lastName,
+                self.firstName,
+                self.addName,
+                self.dateOfBirth,
+                self.telephoneNumber,
+                self.dateFrom,
+                self.workend,
+                self.locale,
+                self.positionOid,
+                self.contractNumber) == (other.lastName,
+                                           other.firstName,
+                                           other.addName,
+                                           other.dateOfBirth,
+                                           other.telephoneNumber,
+                                           other.dateFrom,
+                                           other.workend,
+                                           other.locale,
+                                           other.positionOid,
+                                           other.contractNumber)
+
+
 
     def return_user_data_as_json(self):
         json_data = {"position": self.positionOid,
@@ -102,10 +125,18 @@ class User:
         return tel_number
 
 
+# user = User()
+# params = user.__dict__.keys()
+#
+# print(params)
+#
+# for i in params:
+#     print(getattr(user, i))
+#     # print(getattr(user, i))
+#     #user.i == 123
 
 
 
-a = User()
-print(a)
-a.oid = "8-800-555-35-35"
-print(a)
+
+
+

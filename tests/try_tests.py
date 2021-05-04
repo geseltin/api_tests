@@ -1,5 +1,7 @@
 from helpers.rest_helper import RestHelper
-from helpers.rest_helper import ObjectGenerators
+from helpers.user_helper import UserHelper
+from model.user import User
+
 
 
 # Через pytest удобнее запускать следующим образом: pytest -v -s api_tests.py
@@ -49,19 +51,12 @@ from helpers.rest_helper import ObjectGenerators
 
 
 def test_creating_user():
-    url = "http://10.201.48.88:8080/inrights/api/user/card/new"
-    headers = {"Accept-Encoding": "gzip, deflate", "Accept-Language": "ru"}
-    params = {"id": "users.NewUser-1"}
 
-    rest_helper = RestHelper()
-    object_generator = ObjectGenerators()
-    json = object_generator.user_data()
-    # print(json)
+    initial_user = User()
 
-    response = rest_helper.call_request(request_type="PUT", url=url, json=json, headers=headers, params=params)
+    UserHelper().create_user(user=initial_user)
+    print(initial_user)
 
-    json_response = response.json()
-    print(json_response)
 
 
 
