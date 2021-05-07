@@ -4,7 +4,7 @@ from model.user import User
 
 
 
-# Через pytest удобнее запускать следующим образом: pytest -v -s api_tests.py
+# Через pytest удобнее запускать следующим образом: pytest -v -s old_tests.py
 # session = requests.session()
 
 
@@ -53,9 +53,16 @@ from model.user import User
 def test_creating_user():
 
     initial_user = User()
+    uh = UserHelper()
 
-    UserHelper().create_user(user=initial_user)
-    print(initial_user)
+    created_user = uh.create_user(user=initial_user)
+    #print(created_user)
+
+    #user_get_by_oid = uh.get_user_data_by_oid(oid=created_user.oid)
+    #print(user_get_by_oid)
+
+    #uh.compare_user_data(created_user, user_get_by_oid)
+
 
 
 

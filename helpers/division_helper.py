@@ -18,6 +18,8 @@ class OrgHelper:
 
         print(response)
 
+    def get_division_by_oid(self, division, oid):
+
 
 
 

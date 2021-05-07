@@ -10,10 +10,32 @@ class User:
                  dateOfBirth=None,
                  telephoneNumber=None,
                  type="штатный",
-                 dateFrom="1998-12-31T21:00:00.000Z",
+                 workstart="1998-12-31T21:00:00.000Z",
                  workend="2050-12-30T21:00:00.000Z",
                  locale=None,
-                 positionOid=["4ff0f334-66d3-42fe-beb6-2965ba3ed830"],
+                 position={
+    "id": "9afd1807-d2c0-4ae9-a3cb-eb333a25f404",
+    "ids": [
+        "-id-company-gk-ra",
+        "895c3447-f048-499a-8424-6d7f7180467d",
+        "61c5664b-b27a-4ed1-958f-3db08c1e62e2",
+        "9afd1807-d2c0-4ae9-a3cb-eb333a25f404"
+    ],
+    "name": [
+        "Госкорпорация \"Росатом\"",
+        "ГК \"Росатом\"",
+        "Нейтрон",
+        "ГлавРеакт"
+    ],
+    "path": "/root/-id-company-gk-ra/895c3447-f048-499a-8424-6d7f7180467d/61c5664b-b27a-4ed1-958f-3db08c1e62e2/9afd1807-d2c0-4ae9-a3cb-eb333a25f404",
+    "paths": [
+        "Госкорпорация \"Росатом\"",
+        "ГК \"Росатом\"",
+        "Нейтрон",
+        "ГлавРеакт"
+    ],
+    "type": "position"
+},
                  contractNumber=None,
                  manager=None,
                  candContactEmployee=None,
@@ -31,8 +53,8 @@ class User:
                  empNumber=None,
                  employeeType=None,
                  floorNumber=None,
-                 funcManager='Должен быть реальный юзер',
-                 gender=None,
+                 funcManager='1ae49411-38db-4beb-8172-5f9c4969c8de',
+                 gender="Male",
                  hrCategory='20',
                  hrGroup='1',
                  hrStatus='active',
@@ -40,6 +62,7 @@ class User:
                  inn=None,
                  interNumber=None,
                  isCandidate=None,
+                 locality='Никит',
                  locationCode='007',
                  main=None,
                  officeMobilePhoneNumber=None,
@@ -56,6 +79,7 @@ class User:
                  uniqEmployeeId=None,
                  vipUser=None,
                  workplaceNumber=None):
+
         self.oid = oid
         self.lastName = lastName or self.generate_last_name()
         self.firstName = firstName or self.generate_first_name()
@@ -63,10 +87,10 @@ class User:
         self.dateOfBirth = dateOfBirth or self.generate_date_of_birth()
         self.telephoneNumber = telephoneNumber or self.generate_telephone_number()
         self.type = type
-        self.dateFrom = dateFrom
         self.workend = workend
+        self.workstart = workstart
         self.locale = locale
-        self.positionOid = positionOid
+        self.position = position
         self.contractNumber = contractNumber
         self.manager = manager
         self.candContactEmployee = candContactEmployee
@@ -93,6 +117,7 @@ class User:
         self.inn = inn or self.generate_inn()
         self.interNumber = interNumber
         self.isCandidate = isCandidate
+        self.locality = locality
         self.locationCode = locationCode #TODO генератор кода локации
         self.main = main
         self.officeMobilePhoneNumber = officeMobilePhoneNumber or self.generate_telephone_number()
@@ -100,8 +125,8 @@ class User:
         self.passportIssueDate = passportIssueDate
         self.passportIssueDiv = passportIssueDiv
         self.passportIssueDivCode = passportIssueDivCode
-        self.passportNumber = passportNumber
-        self.passportSeries = passportSeries
+        self.passportNumber = passportNumber or self.generate_passport_number()
+        self.passportSeries = passportSeries or self.generate_passport_series()
         self.placeOfBirth = placeOfBirth
         self.regionOfBirth = regionOfBirth
         self.roomNumber = roomNumber
@@ -110,18 +135,30 @@ class User:
         self.vipUser = vipUser
         self.workplaceNumber = workplaceNumber
 
+
     def __repr__(self):
         return f'User with atributes --- oid: {self.oid}, ' \
-               f'last_name: {self.lastName}, ' \
-               f'first_name: {self.firstName}, ' \
-               f'add_name: {self.additionalName}, ' \
+               f'lastName: {self.lastName}, ' \
+               f'firstName: {self.firstName}, ' \
+               f'additionalName: {self.additionalName}, ' \
                f'dateOfBirth: {self.dateOfBirth}, ' \
+               f'gender: {self.gender}, ' \
+               f'citizenship: {self.citizenship}, ' \
+               f'uniqEmployeeId: {self.uniqEmployeeId}, ' \
+               f'inn: {self.inn}, ' \
+               f'passportSeries: {self.passportSeries}, ' \
+               f'passportNumber: {self.passportNumber}, ' \
+               f'passportIssueDiv: {self.passportIssueDiv}, ' \
+               f'passportIssueDivCode: {self.passportIssueDivCode}, ' \
+               f'passportIssueDate: {self.passportIssueDate}, ' \
+               f'countyOfBirth: {self.countyOfBirth}, ' \
+               f'regionOfBirth: {self.regionOfBirth}, ' \
+               f'placeOfBirth: {self.placeOfBirth}, ' \
                f'telephoneNumber: {self.telephoneNumber}, ' \
                f'type: {self.type}, ' \
-               f'dateFrom: {self.dateFrom}, ' \
+               f'workstart: {self.workstart}, ' \
                f'workend: {self.workend}, ' \
                f'locale: {self.locale}, ' \
-               f'positionOid: {self.positionOid}, ' \
                f'contractNumber: {self.contractNumber}'
 
     def __eq__(self, other):
@@ -129,37 +166,85 @@ class User:
                 self.firstName,
                 self.additionalName,
                 self.dateOfBirth,
-                self.telephoneNumber,
-                self.dateFrom,
-                self.workend,
-                self.locale,
-                self.positionOid,
-                self.contractNumber) == (other.lastName,
+                self.gender,
+                self.citizenship,
+                self.inn,
+                self.passportSeries,
+                self.passportNumber,
+                self.passportIssueDiv,
+                self.passportIssueDivCode,
+                self.passportIssueDate,
+                self.countyOfBirth,
+                self.regionOfBirth,
+                self.placeOfBirth,
+                self.uniqEmployeeId) ==  (other.lastName,
                                            other.firstName,
                                            other.additionalName,
                                            other.dateOfBirth,
-                                           other.telephoneNumber,
-                                           other.dateFrom,
-                                           other.workend,
-                                           other.locale,
-                                           other.positionOid,
-                                           other.contractNumber)
-
+                                           other.gender,
+                                           other.citizenship,
+                                           other.inn,
+                                           other.passportSeries,
+                                           other.passportNumber,
+                                           other.passportIssueDiv,
+                                           other.passportIssueDivCode,
+                                           other.passportIssueDate,
+                                           other.countyOfBirth,
+                                           other.regionOfBirth,
+                                           other.placeOfBirth,
+                                           other.uniqEmployeeId,)
 
 
     def return_user_data_as_json(self):
-        json_data = {"position": self.positionOid,
-                     "manager": self.manager,
-                     "lastName": self.lastName,
-                     "firstName": self.firstName,
-                     "additionalName": self.additionalName,
+        json_data = {"additionalName": self.additionalName,
+                     "candContactEmployee": self.candContactEmployee,
+                     "candOwrp": self.candOwrp,
+                     "candPC": self.candPC,
+                     "candPhone": self.candPhone,
+                     "candPlanStartDate": self.candPlanStartDate,
+                     "candRnst": self.candRnst,
+                     "candWorkPlace1": self.candWorkPlace1,
+                     "candWorkPlace2": self.candWorkPlace2,
+                     "category": self.category,
+                     "citizenship": self.citizenship,
+                     "costPlace": self.costPlace,
+                     "countyOfBirth": self.countyOfBirth,
                      "dateOfBirth": self.dateOfBirth,
-                     "type": self.type,
-                     "contractNumber": self.contractNumber,
-                     "dateFrom": self.dateFrom,
+                     "empNumber": self.empNumber,
+                     "employeeType": self.employeeType,
+                     "firstName": self.firstName,
+                     "floorNumber": self.floorNumber,
+                     "funcManager": self.funcManager,
+                     "gender": self.gender,
+                     "hrCategory": self.hrCategory,
+                     "hrGroup": self.hrGroup,
+                     "hrStatus": self.hrStatus,
+                     "hrSubstitute": self.hrSubstitute,
+                     "inn": self.inn,
+                     "interNumber": self.interNumber,
+                     "isCandidate": self.isCandidate,
+                     "lastName": self.lastName,
+                     "locality": self.locality,
+                     "locationCode": self.locationCode,
+                     "main": self.main,
+                     "officeMobilePhoneNumber": self.officeMobilePhoneNumber,
+                     "org": self.org,
+                     "passportIssueDate": self.passportIssueDate,
+                     "passportIssueDiv": self.passportIssueDiv,
+                     "passportIssueDivCode": self.passportIssueDivCode,
+                     "passportNumber": self.passportNumber,
+                     "passportSeries": self.passportSeries,
+                     "placeOfBirth": self.placeOfBirth,
+                     "position": self.position,
+                     "regionOfBirth": self.regionOfBirth,
+                     "roomNumber": self.roomNumber,
+                     "substitute": self.substitute,
+                     "telephoneNumber": self.telephoneNumber,
+                     "uniqEmployeeId": self.uniqEmployeeId,
+                     "vipUser": self.vipUser,
                      "workend": self.workend,
-                     "locale": self.locale,
-                     "telephoneNumber": self.telephoneNumber}
+                     "workplaceNumber": self.workplaceNumber,
+                     "workstart": self.workstart}
         return json_data
 
     def generate_last_name(self):
@@ -209,9 +294,20 @@ class User:
         inn = "{0[0]}{0[1]}{0[2]}-{0[3]}{0[4]}{0[5]}-{0[6]}{0[7]}{0[8]} {0[9]}{0[10]}".format(cypher_collection)
         return inn
 
+    def generate_passport_number(self):
+        cypher_collection = [str(random.randint(0, 9)) for i in range(6)]
+        passport_number = "{0[0]}{0[1]}{0[2]}{0[3]}{0[4]}{0[]5}".format(cypher_collection)
+        return passport_number
+
+    def generate_passport_series(self):
+        cypher_collection = [str(random.randint(0, 9)) for i in range(4]
+        passport_series = "{0[0]}{0[1]} {0[2]}{0[3]}".format(cypher_collection)
+        return passport_series
+
 
 # user = User()
 # params = user.__dict__.keys()
+# print(user)
 #
 # print(params)
 #
@@ -220,58 +316,5 @@ class User:
 #     # print(getattr(user, i))
 #     #user.i == 123
 
-
-
-additionalName: "Отечество"
-candContactEmployee: null
-candOwrp: null
-candPC: null
-candPhone: null
-candPlanStartDate: null
-candRnst: null
-candWorkPlace1: null
-candWorkPlace2: null
-category: "А"
-citizenship: "RU"
-costPlace: null
-countyOfBirth: null
-dateOfBirth: "1994-12-31T21:00:00.000Z"
-empNumber: null
-employeeType: null
-firstName: "Имене"
-floorNumber: null
-funcManager: "1ae49411-38db-4beb-8172-5f9c4969c8de"
-gender: null
-hrCategory: "20"
-hrGroup: "1"
-hrStatus: "active"
-hrSubstitute: null
-inn: null
-interNumber: null
-isCandidate: null
-lastName: "Фалафилия"
-locality: "Никитски"
-locationCode: "007"
-main: null
-officeMobilePhoneNumber: null
-org: null
-passportIssueDate: null
-passportIssueDiv: null
-passportIssueDivCode: null
-passportNumber: null
-passportSeries: null
-placeOfBirth: null
-position: {id: "9afd1807-d2c0-4ae9-a3cb-eb333a25f404",…}
-regionOfBirth: null
-roomNumber: null
-substitute: null
-telephoneNumber: null
-uniqEmployeeId: null
-vipUser: null
-workend: null
-workplaceNumber: null
-workstart: "1998-12-31T21:00:00.000Z"
-
-{"lastName":"Фалафилия","firstName":"Имене","additionalName":"Отечество","dateOfBirth":"1994-12-31T21:00:00.000Z","gender":null,"citizenship":"RU","uniqEmployeeId":null,"inn":null,"passportSeries":null,"passportNumber":null,"passportIssueDiv":null,"passportIssueDivCode":null,"passportIssueDate":null,"countyOfBirth":null,"regionOfBirth":null,"placeOfBirth":null,"empNumber":null,"category":"А","position":{"id":"9afd1807-d2c0-4ae9-a3cb-eb333a25f404","ids":["-id-company-gk-ra","895c3447-f048-499a-8424-6d7f7180467d","61c5664b-b27a-4ed1-958f-3db08c1e62e2","9afd1807-d2c0-4ae9-a3cb-eb333a25f404"],"name":["Госкорпорация \"Росатом\"","ГК \"Росатом\"","Нейтрон","ГлавРеакт"],"path":"/root/-id-company-gk-ra/895c3447-f048-499a-8424-6d7f7180467d/61c5664b-b27a-4ed1-958f-3db08c1e62e2/9afd1807-d2c0-4ae9-a3cb-eb333a25f404","paths":["Госкорпорация \"Росатом\"","ГК \"Росатом\"","Нейтрон","ГлавРеакт"],"type":"position"},"org":null,"hrStatus":"active","workstart":"1998-12-31T21:00:00.000Z","workend":null,"funcManager":"1ae49411-38db-4beb-8172-5f9c4969c8de","substitute":null,"hrSubstitute":null,"hrGroup":"1","hrCategory":"20","employeeType":null,"costPlace":null,"vipUser":null,"telephoneNumber":null,"officeMobilePhoneNumber":null,"interNumber":null,"locality":"Никитски","locationCode":"007","workplaceNumber":null,"floorNumber":null,"roomNumber":null,"candWorkPlace1":null,"candWorkPlace2":null,"candPlanStartDate":null,"candContactEmployee":null,"candPC":null,"candPhone":null,"candOwrp":null,"candRnst":null,"main":null,"isCandidate":null}
 
 
