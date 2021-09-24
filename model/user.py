@@ -1,4 +1,5 @@
 import random
+from model.employment import Employment
 
 class User:
 
@@ -46,7 +47,7 @@ class User:
                  candRnst=None,
                  candWorkPlace1=None,
                  candWorkPlace2=None,
-                 category='A',
+                 category='А',
                  citizenship='RU',
                  costPlace=None,
                  countyOfBirth=None,
@@ -55,7 +56,7 @@ class User:
                  floorNumber=None,
                  funcManager='1ae49411-38db-4beb-8172-5f9c4969c8de',
                  gender="Male",
-                 hrCategory='20',
+                 hrCategory='22',
                  hrGroup='1',
                  hrStatus='active',
                  hrSubstitute=None,
@@ -81,11 +82,11 @@ class User:
                  workplaceNumber=None):
 
         self.oid = oid
-        self.lastName = lastName or self.generate_last_name()
-        self.firstName = firstName or self.generate_first_name()
-        self.additionalName = addName or self.generate_add_name()
-        self.dateOfBirth = dateOfBirth or self.generate_date_of_birth()
-        self.telephoneNumber = telephoneNumber or self.generate_telephone_number()
+        self.lastName = lastName or self._generate_last_name()
+        self.firstName = firstName or self._generate_first_name()
+        self.additionalName = addName or self._generate_add_name()
+        self.dateOfBirth = dateOfBirth or  self._generate_date_of_birth()
+        self.telephoneNumber = telephoneNumber or self._generate_telephone_number()
         self.type = type
         self.workend = workend
         self.workstart = workstart
@@ -114,19 +115,19 @@ class User:
         self.hrGroup = hrGroup
         self.hrStatus = hrStatus
         self.hrSubstitute = hrSubstitute
-        self.inn = inn or self.generate_inn()
+        self.inn = inn # self._generate_inn()
         self.interNumber = interNumber
         self.isCandidate = isCandidate
         self.locality = locality
         self.locationCode = locationCode #TODO генератор кода локации
         self.main = main
-        self.officeMobilePhoneNumber = officeMobilePhoneNumber or self.generate_telephone_number()
+        self.officeMobilePhoneNumber = officeMobilePhoneNumber or self._generate_telephone_number()
         self.org = org
         self.passportIssueDate = passportIssueDate
         self.passportIssueDiv = passportIssueDiv
         self.passportIssueDivCode = passportIssueDivCode
-        self.passportNumber = passportNumber or self.generate_passport_number()
-        self.passportSeries = passportSeries or self.generate_passport_series()
+        self.passportNumber = passportNumber # self._generate_passport_number()
+        self.passportSeries = passportSeries # self._generate_passport_series()
         self.placeOfBirth = placeOfBirth
         self.regionOfBirth = regionOfBirth
         self.roomNumber = roomNumber
@@ -134,10 +135,12 @@ class User:
         self.uniqEmployeeId = uniqEmployeeId
         self.vipUser = vipUser
         self.workplaceNumber = workplaceNumber
+        self.employment = Employment()
 
 
     def __repr__(self):
-        return f'User with atributes --- oid: {self.oid}, ' \
+        return f'User with atributes --- fullname: {self.lastName} {self.firstName} {self.additionalName},  ' \
+               f'oid: {self.oid}, ' \
                f'lastName: {self.lastName}, ' \
                f'firstName: {self.firstName}, ' \
                f'additionalName: {self.additionalName}, ' \
@@ -247,28 +250,26 @@ class User:
                      "workstart": self.workstart}
         return json_data
 
-    def generate_last_name(self):
-        last_name_collection = ["Иванов", "Петров", "Сидоров", "Кузнецов", "Биткоинов", "Картошкин", "Болконский",
-                                "Хренов", "Приколов", "Онегин", "Пушкин", "Ленин", "Сталин", "Брежнев", "Силуанов",
-                                "Путин", "Медведев", "Зайцев", "Коровин", "Птицев", "Собакин", "Кошкин", "Пельмешкин",
+    def _generate_last_name(self):
+        last_name = random.choice(["Иванов", "Петров", "Сидоров", "Кузнецов", "Биткоинов", "Картошкин", "Болконский",
+                                 "Хренов", "Приколов", "Онегин", "Пушкин", "Ленин", "Сталин", "Брежнев", "Силуанов",
+                                 "Путин", "Медведев", "Зайцев", "Коровин", "Птицев", "Собакин", "Кошкин", "Пельмешкин",
                                 "Дураков", "Огурцов", "Водкин", "Ивкин", "Тимофеев", "Андреев", "Соловьев", "Тараканов",
-                                "Муравьев", "Абдулкахова", "Титов", "Васильев"]
-        last_name = last_name_collection[random.randint(0, len(last_name_collection) - 1)]
+                                 "Муравьев", "Абдулкахов", "Титов", "Васильев"])
         return last_name
 
-    def generate_first_name(self):
-        first_name_collection = ["Андрей", "Александр", "Сергей", "Тимофей", "Антон", "Петр", "Иван", "Николай",
+    def _generate_first_name(self):
+        first_name = random.choice(["Андрей", "Александр", "Сергей", "Тимофей", "Антон", "Петр", "Иван", "Николай",
                                  "Константин", "Анатолий", "Дмитрий", "Михаил", "Илья", "Джон", "Агафон", "Авдей",
                                  "Альберт", "Вадим", "Виталий", "Вячеслав", "Владимир", "Всеволод", "Геннадий", "Глеб",
                                  "Герасим", "Герман", "Григорий", "Даниил", "Денис", "Дорофей", "Демьян", "Евгений",
                                  "Назар", "Никита", "Эдуард", "Яков", "Ярослав", "Юлиан", "Савелий", "Святослав",
                                  "Прокопий", "Ефим", "Игнатий", "Руслан", "Ростислав", "Прохор", "Семен", "Ираклий",
-                                 "Кузьма", "Лаврентий", "Лукьян"]
-        first_name = first_name_collection[random.randint(0, len(first_name_collection) - 1)]
+                                 "Кузьма", "Лаврентий", "Лукьян"])
         return first_name
 
-    def generate_add_name(self):
-        add_name_collection = ["Андреевич", "Александрович", "Сергеевич", "Тимофеевич", "Антонович", "Петрович",
+    def _generate_add_name(self):
+        add_name = random.choice(["Андреевич", "Александрович", "Сергеевич", "Тимофеевич", "Антонович", "Петрович",
                                "Иванович", "Николаевич", "Константинович", "Анатольевич", "Дмитриевич", "Михайлович",
                                "Ильич", "Агафонович", "Авдеевич", "Альбертович", "Вадимович", "Витальевич",
                                "Вячеславович",
@@ -276,45 +277,32 @@ class User:
                                "Григорьевич", "Даниилович", "Денисович", "Дорофеевич", "Демьянович", "Евгеньевич",
                                "Назарович", "Никитич", "Эдуардович", "Ярославович", "Юлианович", "Савельевич",
                                "Святославович", "Прокопьевич", "Ефимович", "Игнатьевич", "Русланович", "Ростиславович",
-                               "Прохорович", "Семенович", "Ираклиевич", "Кузьмич", "Лаврентьевич", "Лукьянович"]
-        add_name = add_name_collection[random.randint(0, len(add_name_collection) - 1)]
+                               "Прохорович", "Семенович", "Ираклиевич", "Кузьмич", "Лаврентьевич", "Лукьянович"])
         return add_name
 
-    def generate_date_of_birth(self):
+    def _generate_date_of_birth(self):
         date_of_birth = f'19{str(random.randint(10, 99))}-02-02'
         return date_of_birth
 
-    def generate_telephone_number(self):
+    def _generate_telephone_number(self):
         cypher_collection = [str(random.randint(0, 9)) for i in range(10)]
         tel_number = "8-{0[0]}{0[1]}{0[2]}-{0[3]}{0[4]}{0[5]}-{0[6]}{0[7]}-{0[8]}{0[9]}".format(cypher_collection)
         return tel_number
 
-    def generate_inn(self):
+    def _generate_inn(self):
         cypher_collection = [str(random.randint(0, 9)) for i in range(11)]
         inn = "{0[0]}{0[1]}{0[2]}-{0[3]}{0[4]}{0[5]}-{0[6]}{0[7]}{0[8]} {0[9]}{0[10]}".format(cypher_collection)
         return inn
 
-    def generate_passport_number(self):
+    def _generate_passport_number(self):
         cypher_collection = [str(random.randint(0, 9)) for i in range(6)]
-        passport_number = "{0[0]}{0[1]}{0[2]}{0[3]}{0[4]}{0[]5}".format(cypher_collection)
+        passport_number = "{0[0]}{0[1]}{0[2]}{0[3]}{0[4]}{0[5]}".format(cypher_collection)
         return passport_number
 
-    def generate_passport_series(self):
-        cypher_collection = [str(random.randint(0, 9)) for i in range(4]
+    def _generate_passport_series(self):
+        cypher_collection = [str(random.randint(0, 9)) for i in range(4)]
         passport_series = "{0[0]}{0[1]} {0[2]}{0[3]}".format(cypher_collection)
         return passport_series
-
-
-# user = User()
-# params = user.__dict__.keys()
-# print(user)
-#
-# print(params)
-#
-# for i in params:
-#     print(getattr(user, i))
-#     # print(getattr(user, i))
-#     #user.i == 123
 
 
 

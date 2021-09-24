@@ -1,11 +1,118 @@
 from helpers.rest_helper import RestHelper
 from helpers.user_helper import UserHelper
+from helpers.org_helper import OrgHelper
+from helpers.request_helper import RequestHelper
 from model.user import User
+from model.division import Division
+from model.company import Company
+from model.position import Position
 
 
 
 # Через pytest удобнее запускать следующим образом: pytest -v -s old_tests.py
-# session = requests.session()
+
+
+# Авторизации в системе админом DONE
+# def test_admin_autorization():
+#     rh = RestHelper()
+#     rh.call_request()
+
+
+# Создание юзера DONE
+# def test_creating_user():
+#
+#     initial_user = User()
+#     uh = UserHelper()
+#
+#     created_user = uh.create_user(user=initial_user)
+#
+#     user_get_by_oid = uh.get_user_data_by_oid(oid=created_user.oid)
+#
+#     uh.compare_user_data(created_user, user_get_by_oid)
+
+
+# Создание заявки/различных видов заявок
+# def test_create_request():
+#     initial_user = User()
+#     requestHelper = RequestHelper()
+#     userHelper = UserHelper()
+#     created_user = userHelper.create_user(user=initial_user)
+#     created_user_employment = userHelper.get_employment_by_user_oid(oid=created_user.oid)
+#     requestHelper.check_and_publicate_applications_for_position(position_oid=created_user_employment.position['id'])
+#     requestHelper.create_request(employment_oid=created_user_employment.id)
+
+#
+# # Создание компании DONE
+# def test_create_company():
+#     initial_company = Company()
+#     orgHelper = orgHelper()
+#
+#     created_company = orgHelper.create_company_type(initial_company=initial_company)
+#
+#     company_get_by_oid = orgHelper.get_company_by_oid(company_oid=created_company.oid)
+#
+#     orgHelper.compare_company_data(created_company=created_company, company_get_by_oid=company_get_by_oid)
+# # Создание подразделения DONE
+# def test_create_division():
+#     initial_division = Division()
+#     orgHelper = OrgHelper()
+#
+#     created_division = orgHelper.create_division(initial_division=initial_division, parent_id='3252e137-98db-47a5-bae7-6cf947ddfdaf')
+#
+#     division_get_by_oid = orgHelper.get_division_by_oid(division_oid=created_division.oid)
+#
+#     orgHelper.compare_division_data(created_division=created_division, division_get_by_oid=division_get_by_oid)
+# # Создание должности DONE
+# def test_create_position():
+#     initial_position = Position()
+#     orgHelper = OrgHelper()
+#
+#     created_position = orgHelper.create_position(parent_division_oid='передать оид созданного ранее подразделения')
+#
+#     position_get_by_oid = orgHelper.get_children_by_parent_node_oid(parent_oid='передать оид ранее созданного подразделения', child_oid='передать оид созданной должности')
+#
+#     orgHelper.compare_position_data(created_position=None, position_get_by_oid=None)
+# # Создание орг стурктуры DONE
+# def test_create_org_structure():
+#     orgHelper = OrgHelper()
+#     initial_company = Company()
+#     initial_division = Division()
+#     initial_position = Position()
+#
+#     created_company = orgHelper.create_company_type(initial_company=initial_company)
+#     company_get_by_oid = orgHelper.get_company_by_oid(company_oid=created_company.oid)
+#     orgHelper.compare_company_data(created_company=created_company,
+#                                    company_get_by_oid=company_get_by_oid)
+#
+#     created_division = orgHelper.create_division(initial_division=initial_division,
+#                                                  parent_id=created_company.oid)
+#     division_get_by_oid = orgHelper.get_division_by_oid(division_oid=created_division.oid)
+#     orgHelper.compare_division_data(created_division=created_division,
+#                                     division_get_by_oid=division_get_by_oid)
+#
+#     created_position = orgHelper.create_position(parent_division_oid=created_division.oid)
+#     position_get_by_oid = orgHelper.get_children_by_parent_node_oid(parent_oid=created_division.oid,
+#                                                                     child_oid=created_position.id)
+#     orgHelper.compare_position_data(created_position=created_position,
+#                                     position_get_by_oid=position_get_by_oid)
+
+
+
+
+
+
+# Назначение/отзыв доступов (по заявке - невозможно, попробовать назначить базовыми и проверить наличие УЗ ГК + ящик??)
+
+def test_find_parent():
+    orgHelper = OrgHelper()
+    orgHelper._find_parent_for_position(position_oid ='568649f6-f4ab-4e9f-be7f-a502693f1dd7')
+
+
+
+
+
+
+
 
 
 # def test_open_login_page():
@@ -48,111 +155,3 @@ from model.user import User
 #                           "ids":["876412c3-4fab-4c12-b42f-7a40a1b38267"],
 #                           "paths":["Api test"],
 #                           "type":"org"},"manager": None}
-
-
-def test_creating_user():
-
-    initial_user = User()
-    uh = UserHelper()
-
-    created_user = uh.create_user(user=initial_user)
-    #print(created_user)
-
-    #user_get_by_oid = uh.get_user_data_by_oid(oid=created_user.oid)
-    #print(user_get_by_oid)
-
-    #uh.compare_user_data(created_user, user_get_by_oid)
-
-
-
-
-
-
-    # print(response.status_code)
-#
-#     items = json_response['items']
-#     for i in items:
-#         if i['name'] == 'lastName':
-#             new_user_last_name = i['value']
-#
-#     for i in items:
-#         if i['name'] == 'firstName':
-#             new_user_first_name = i['value']
-#
-#     for i in items:
-#         if i['name'] == 'additionalName':
-#             new_user_add_name = i['value']
-#
-#     new_user_oid = json_response['oid']
-#     # new_user_last_name = json_response['items'][0]['value']
-#     # new_user_first_name = json_response['items'][2]['value']
-#     # new_user_add_name = json_response['items'][4]['value']
-#
-#     print(str(new_user_oid))
-#     print(str(new_user_last_name))
-#     print(str(new_user_first_name))
-#     print(str(new_user_add_name))
-#
-#     url = f"http://10.201.48.88:8080/inrights/api/user/card/{new_user_oid}"
-#     params = None
-#     headers = None
-#     response = rest_helper.call_request(request_type="GET", url=url, json=json, headers=headers, params=params)
-#     json_response_from_get_request = response.json()
-#
-#     json_items_from_get_request = json_response_from_get_request['items']
-#
-#     for i in json_items_from_get_request:
-#         if i['name'] == 'lastName':
-#             new_user_last_name_from_get_request = i['value']
-#
-#     for i in json_items_from_get_request:
-#         if i['name'] == 'firstName':
-#             new_user_first_name_from_get_request = i['value']
-#
-#     for i in json_items_from_get_request:
-#         if i['name'] == 'additionalName':
-#             new_user_add_name_from_get_request = i['value']
-#
-#     test_result = []
-#
-#     if new_user_add_name == new_user_add_name_from_get_request:
-#         test_result.append('PASS')
-#     else:
-#         test_result.append('FAIL')
-#
-#     if new_user_first_name == new_user_first_name_from_get_request:
-#         test_result.append('PASS')
-#     else:
-#         test_result.append('FAIL')
-#
-#     if new_user_last_name == new_user_last_name_from_get_request:
-#         test_result.append('PASS')
-#     else:
-#         test_result.append('FAIL')
-#
-#     print(test_result)
-#
-#     if 'FAIL' in test_result:
-#         assert False
-#     else:
-#         assert True
-
-    # print(f"Creating user - successful" + "\nRequest's status code = {str(response.status_code)}")
-    # print("New user with name: " + str(new_user_last_name) + " " + str(new_user_first_name) + " "
-    #       + str(new_user_add_name) + " and oid: " + json_response[
-    #           'oid'] + " successfully created" + "\n***************")
-
-    # if response.status_code == 200 and json_response['oid'] is not None:
-    #      print("Creating user - successful" + "\nRequest's status code = " + str(response.status_code))
-    #      print("New user with name: " + str(last_name) + " " + str(first_name) + " "
-    #            + str(add_name) + " and oid: " + json_response['oid'] + " successfully created" + "\n***************")
-    #      assert True
-    # else:
-    #      print("FAILED: Requests's status = " + str(response.status_code))
-    #      assert False
-
-    # def test_create_company():
-    #     org = OrgHelper()
-    #     org.create_companyType()
-
-
